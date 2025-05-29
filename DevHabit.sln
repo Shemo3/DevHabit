@@ -15,6 +15,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Directory.build.props = Directory.build.props
 		Directory.packages.props = Directory.packages.props
 		compose.yaml = compose.yaml
+		compose.override.yml = compose.override.yml
 	EndProjectSection
 EndProject
 Global
