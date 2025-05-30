@@ -1,4 +1,4 @@
-﻿services:
+services:
   devhabit.api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
@@ -8,5 +8,5 @@
       - "8080"
       - "8081"
     volumes:
-      - ${HOME}/.aspnet/dev-certs/https:/https:ro
-      - ${HOME}/.microsoft/usersecrets/:/home/app/.microsoft/usersecrets
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
