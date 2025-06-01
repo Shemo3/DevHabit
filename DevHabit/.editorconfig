@@ -380,6 +380,9 @@ dotnet_diagnostic.IDE0270.severity = none
 # IDE0290: Use primary constructor
 dotnet_diagnostic.IDE0290.severity = none
 
+# IDE0320: Anonymous function can be made static
+dotnet_diagnostic.IDE0320.severity = none
+
 # SonarAnalyzer.CSharp rules
 
 # S112: General or reserved exceptions should never be thrown
