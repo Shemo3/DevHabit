@@ -20,36 +20,9 @@ public sealed class HabitsController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<HabitsCollectionDto>> GetHabits()
     {
-        List<HabitDto> habits = await _dbContext.Habits.Select(h => new HabitDto()
-        {
-            Id = h.Id,
-            Name = h.Name,
-            Description = h.Description,
-            Type = h.Type,
-            Frequency = new FrequencyDto
-            {
-                Type = h.Frequency.Type,
-                TimesPerPeriod = h.Frequency.TimesPerPeriod
-            },
-            Target = new TargetDto
-            {
-                Value = h.Target.Value,
-                Unit = h.Target.Unit
-            },
-            Status = h.Status,
-            IsArchived = h.IsArchived,
-            EndDate = h.EndDate,
-            Milestone = h.Milestone == null
-                ? null
-                : new MilestoneDto
-                {
-                    Target = h.Milestone.Target,
-                    Current = h.Milestone.Current
-                },
-            CreatedAtUtc = h.CreatedAtUtc,
-            UpdatedAtUtc = h.UpdatedAtUtc,
-            LastCompletedAtUtc = h.LastCompletedAtUtc
-        })
+        List<HabitDto> habits = await _dbContext
+            .Habits
+            .Select(HabitQueries.ProjectToDto())
             .ToListAsync();
         var habitsCollectionDto = new HabitsCollectionDto()
         {
@@ -61,38 +34,11 @@ public sealed class HabitsController : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<HabitDto>> GetHabit(string id)
     {
-        HabitDto? habit = await _dbContext.Habits
+        HabitDto? habit = await _dbContext
+            .Habits
             .Where(h => h.Id == id)
-            .Select(h => new HabitDto()
-            {
-                Id = h.Id,
-                Name = h.Name,
-                Description = h.Description,
-                Type = h.Type,
-                Frequency = new FrequencyDto
-                {
-                    Type = h.Frequency.Type,
-                    TimesPerPeriod = h.Frequency.TimesPerPeriod
-                },
-                Target = new TargetDto
-                {
-                    Value = h.Target.Value,
-                    Unit = h.Target.Unit
-                },
-                Status = h.Status,
-                IsArchived = h.IsArchived,
-                EndDate = h.EndDate,
-                Milestone = h.Milestone == null
-                    ? null
-                    : new MilestoneDto
-                    {
-                        Target = h.Milestone.Target,
-                        Current = h.Milestone.Current
-                    },
-                CreatedAtUtc = h.CreatedAtUtc,
-                UpdatedAtUtc = h.UpdatedAtUtc,
-                LastCompletedAtUtc = h.LastCompletedAtUtc
-            }).FirstOrDefaultAsync();
+            .Select(HabitQueries.ProjectToDto())
+            .FirstOrDefaultAsync();
         if (habit is null)
         {
             return NotFound();
