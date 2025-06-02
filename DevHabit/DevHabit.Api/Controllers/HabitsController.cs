@@ -46,4 +46,15 @@ public sealed class HabitsController : ControllerBase
 
         return Ok(habit);
     }
+
+    [HttpPost]
+    public async Task<ActionResult<HabitDto>> CreateHabit(CreateHabitDto createHabitDto)
+    {
+        Habit habit = createHabitDto.ToEntity();
+        _dbContext.Habits.Add(habit);
+
+        await _dbContext.SaveChangesAsync();
+        HabitDto habitDto = habit.ToDto();
+        return CreatedAtAction(nameof(GetHabit), new { id = habitDto.Id }, habitDto);
+    }
 }
