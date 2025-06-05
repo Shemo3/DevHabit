@@ -26,15 +26,15 @@ services:
     ports:
       - "5432:5432"
 
-  devhabit.seq:
-    image: datalust/seq:2024.3 # or latest
-    environment:
-      ACCEPT_EULA: "Y"
-    volumes:
-      - ./.containers/seq_data:/data
-    ports:
-      - 8080:80
-      - 5341:5341
+  #devhabit.seq:
+    #image: datalust/seq:2024.3 # or latest
+      #environment:
+      #ACCEPT_EULA: "Y"
+      #volumes:
+      #- ./.containers/seq_data:/data
+      #ports:
+      #- 8080:80
+      #- 5341:5341
 
   devhabit.aspire-dashboard:
     image: mcr.microsoft.com/dotnet/aspire-dashboard:9.0
