@@ -21,7 +21,9 @@ public sealed class HabitTagsController : ControllerBase
     [HttpPut]
     public async Task<ActionResult> UpsertHabitTags(string habitId, UpsertHabitTagsDto upsertHabitTagsDto)
     {
-        Habit? habit = await _dbContext.Habits
+        Habit? habit = await _dbContext
+            .Habits
+            .Include(h => h.HabitTags)
             .FirstOrDefaultAsync(h => h.Id == habitId);
         if (habit is null)
         {
