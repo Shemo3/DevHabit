@@ -374,6 +374,9 @@ dotnet_diagnostic.IDE0046.severity = none
 # IDE0053: Use expression body for lambda expression
 dotnet_diagnostic.IDE0053.severity = none
 
+#IDE0072: Add missing cases to switch expression
+dotnet_diagnostic.IDE0072.severity = none
+
 # IDE0270: Use coalesce expression
 dotnet_diagnostic.IDE0270.severity = none
 
