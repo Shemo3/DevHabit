@@ -18,7 +18,7 @@ public class TagsController(ApplicationDbContext dbContext) : ControllerBase
             .Tags
             .Select(TagQueries.ProjectToDto())
             .ToListAsync();
-        var habitsCollectionDto = new TagsCollectionDto { Data = tags };
+        var habitsCollectionDto = new TagsCollectionDto { Items = tags };
         return Ok(habitsCollectionDto);
     }
 
