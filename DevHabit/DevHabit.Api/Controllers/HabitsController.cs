@@ -1,6 +1,7 @@
 ﻿using DevHabit.Api.Database;
 using DevHabit.Api.DTOs.Habits;
 using DevHabit.Api.Entities;
+using FluentValidation;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -19,12 +20,16 @@ public sealed class HabitsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<HabitsCollectionDto>> GetHabits()
+    public async Task<ActionResult<HabitsCollectionDto>> GetHabits([FromQuery] HabitsQueryParameters query)
     {
-        List<HabitDto> habits = await _dbContext
-            .Habits
-            .Select(HabitQueries.ProjectToDto())
-            .ToListAsync();
+        query.Search ??= query.Search?.Trim().ToLower();
+        List<HabitDto> habits = await _dbContext.Habits
+            .Where(h => query.Search == null ||
+                        h.Name.Contains(query.Search) ||
+                        h.Description != null && h.Description.Contains(query.Search))
+            .Where(h => query.Type == null || h.Type == query.Type)
+            .Where(h => query.Status == null || h.Status == query.Status)
+            .Select(HabitQueries.ProjectToDto()).ToListAsync();
         var habitsCollectionDto = new HabitsCollectionDto()
         {
             Data = habits
@@ -49,8 +54,10 @@ public sealed class HabitsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<HabitDto>> CreateHabit(CreateHabitDto createHabitDto)
+    public async Task<ActionResult<HabitDto>> CreateHabit(CreateHabitDto createHabitDto, IValidator<CreateHabitDto> validator)
     {
+        await validator.ValidateAndThrowAsync(createHabitDto);
+
         Habit habit = createHabitDto.ToEntity();
         _dbContext.Habits.Add(habit);
 
