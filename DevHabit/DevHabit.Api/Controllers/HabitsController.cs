@@ -18,9 +18,12 @@ public sealed class HabitsController : ControllerBase
 {
     private readonly ApplicationDbContext _dbContext;
 
-    public HabitsController(ApplicationDbContext dbContext)
+    private readonly LinkService _linkService;
+
+    public HabitsController(ApplicationDbContext dbContext, LinkService linkService)
     {
         _dbContext = dbContext;
+        _linkService = linkService;
     }
 
     [HttpGet]
