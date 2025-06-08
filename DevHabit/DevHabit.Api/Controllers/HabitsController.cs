@@ -68,11 +68,15 @@ public sealed class HabitsController : ControllerBase
 
         var paginationResult = new PaginationResult<ExpandoObject>
         {
-            Items = dataShapingService.ShapeCollectionData(habits, query.Fields),
+            Items = dataShapingService.ShapeCollectionData(habits,
+                query.Fields,
+                h => CreateLinksForHabit(h.Id, query.Fields)),
             Page = query.Page,
             PageSize = query.PageSize,
             TotalCount = totalCount
         };
+
+        paginationResult.Links = CreateLinksForHabits(query, paginationResult.HasPreviousPage, paginationResult.HasNextPage);
         return Ok(paginationResult);
     }
 
@@ -99,6 +103,8 @@ public sealed class HabitsController : ControllerBase
         }
 
         ExpandoObject shapedHabitDto = dataShapingService.ShapeData(habit, fields);
+        List<LinkDto> links = CreateLinksForHabit(id, fields);
+        shapedHabitDto.TryAdd("links", links);
 
         return Ok(shapedHabitDto);
     }
@@ -113,6 +119,7 @@ public sealed class HabitsController : ControllerBase
 
         await _dbContext.SaveChangesAsync();
         HabitDto habitDto = habit.ToDto();
+        habitDto.Links = CreateLinksForHabit(habit.Id, null);
         return CreatedAtAction(nameof(GetHabit), new { id = habitDto.Id }, habitDto);
     }
 
