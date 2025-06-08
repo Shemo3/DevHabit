@@ -162,4 +162,72 @@ public sealed class HabitsController : ControllerBase
         await _dbContext.SaveChangesAsync();
         return NoContent();
     }
+
+    private List<LinkDto> CreateLinksForHabits(
+        HabitsQueryParameters parameters,
+        bool hasPreviousPage,
+        bool hasNextPage)
+    {
+        List<LinkDto> links =
+        [
+            _linkService.Create(nameof(GetHabits), "self", HttpMethods.Get, new
+            {
+                page = parameters.Page,
+                pageSize = parameters.PageSize,
+                fields = parameters.Fields,
+                q = parameters.Search,
+                sort = parameters.Sort,
+                type = parameters.Type,
+                status = parameters.Status
+            }),
+            _linkService.Create(nameof(CreateHabit), "create", HttpMethods.Post)
+        ];
+
+        if (hasNextPage)
+        {
+            links.Add(_linkService.Create(nameof(GetHabits), "next-page", HttpMethods.Get, new
+            {
+                page = parameters.Page + 1,
+                pageSize = parameters.PageSize,
+                fields = parameters.Fields,
+                q = parameters.Search,
+                sort = parameters.Sort,
+                type = parameters.Type,
+                status = parameters.Status
+            }));
+        }
+
+        if (hasPreviousPage)
+        {
+            links.Add(_linkService.Create(nameof(GetHabits), "previous-page", HttpMethods.Get, new
+            {
+                page = parameters.Page - 1,
+                pageSize = parameters.PageSize,
+                fields = parameters.Fields,
+                q = parameters.Search,
+                sort = parameters.Sort,
+                type = parameters.Type,
+                status = parameters.Status
+            }));
+        }
+
+        return links;
+    }
+
+    private List<LinkDto> CreateLinksForHabit(string id, string? fields)
+    {
+        List<LinkDto> links =
+        [
+            _linkService.Create(nameof(GetHabit), "self", HttpMethods.Get, new { id, fields }),
+            _linkService.Create(nameof(UpdateHabit), "update", HttpMethods.Put, new { id }),
+            _linkService.Create(nameof(PatchHabit), "partial-update", HttpMethods.Patch, new { id }),
+            _linkService.Create(nameof(DeleteHabit), "delete", HttpMethods.Delete, new { id }),
+            _linkService.Create(nameof(HabitTagsController.UpsertHabitTags),
+                "upsert-tags",
+                HttpMethods.Put,
+                new { habitId = id },
+                HabitTagsController.Name)
+        ];
+        return links;
+    }
 }
