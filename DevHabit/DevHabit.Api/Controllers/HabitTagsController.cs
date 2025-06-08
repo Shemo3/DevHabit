@@ -12,6 +12,8 @@ public sealed class HabitTagsController : ControllerBase
 {
     private readonly ApplicationDbContext _dbContext;
 
+    public static readonly string Name = nameof(HabitTagsController).Replace("Controller", string.Empty);
+
     public HabitTagsController(ApplicationDbContext dbContext)
     {
         _dbContext = dbContext;
