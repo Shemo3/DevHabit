@@ -27,6 +27,7 @@ public sealed class HabitsController : ControllerBase
     }
 
     [HttpGet]
+    [Produces(MediaTypeNames.Application.Json, CustomMediaTypeNames.Application.HateoasJson)]
     public async Task<IActionResult> GetHabits(
         [FromQuery] HabitsQueryParameters query,
         SortMappingProvider sortMappingProvider,
