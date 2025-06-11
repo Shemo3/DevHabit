@@ -1,5 +1,6 @@
 ﻿using System.Dynamic;
 using System.Net.Mime;
+using Asp.Versioning;
 using DevHabit.Api.Database;
 using DevHabit.Api.DTOs.Common;
 using DevHabit.Api.DTOs.Habits;
@@ -15,6 +16,7 @@ namespace DevHabit.Api.Controllers;
 
 [ApiController]
 [Route("habits")]
+[ApiVersion(1.0)]
 public sealed class HabitsController : ControllerBase
 {
     private readonly ApplicationDbContext _dbContext;
@@ -88,6 +90,7 @@ public sealed class HabitsController : ControllerBase
     }
 
     [HttpGet("{id}")]
+    [MapToApiVersion(1.0)]
     public async Task<ActionResult<HabitWithTagsDto>> GetHabit(
         string id,
         string? fields,
